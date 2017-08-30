@@ -1,6 +1,9 @@
 FROM centos:7
 MAINTAINER sgardner
 
+ENV SBT_VERSION 1.0.0
+ENV JDK_VERSION 1.8.0
+
 RUN yum update -y && \
 	yum clean all
 
@@ -9,9 +12,9 @@ RUN yum install -y git && \
 	yum install -y wget && \
 	yum install -y maven && \
 	yum install -y openssh-server && \
-	yum install -y java-1.8.0-openjdk && \
+	yum install -y java-$JDK_VERSION-openjdk && \
 	yum install -y sudo && \
-	yum localinstall -y http://dl.bintray.com/sbt/rpm/sbt-1.0.0.rpm && \
+	yum localinstall -y http://dl.bintray.com/sbt/rpm/sbt-$SBT_VERSION.rpm && \
 	yum clean all
 
 RUN /usr/bin/ssh-keygen -A
