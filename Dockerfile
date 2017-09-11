@@ -24,16 +24,18 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pamloginu
 RUN useradd jenkins -m -s /bin/bash
 
 RUN mkdir /home/jenkins/.ssh
-RUN ssh-keygen -f /home/jenkins/.ssh/id_rsa -N '' -t rsa -b 4096
-RUN cp -p /home/jenkins/.ssh/id_rsa.pub /home/jenkins/.ssh/authorized_keys
-RUN chown -R jenkins /home/jenkins
-RUN chgrp -R jenkins /home/jenkins
-RUN chmod 600 /home/jenkins/.ssh/authorized_keys
-RUN chmod 700 /home/jenkins/.ssh
+
+COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
+
+RUN chown -R jenkins /home/jenkins && \
+    chgrp -R jenkins /home/jenkins && \
+    chmod 600 /home/jenkins/.ssh/authorized_keys && \
+    chmod 700 /home/jenkins/.ssh
 
 RUN echo "jenkins ALL=(ALL) ALL" >> /etc/sudoers
 
 COPY /files/resolv.conf /etc/resolv.conf
+COPY /files/known_hosts /home/jenkins/.ssh/known_hosts
 
 EXPOSE 22
 CMD ["/usr/sbin/sshd","-D"]
